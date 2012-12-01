@@ -1,4 +1,4 @@
-package com;
+package com.ui;
 
 //~--- non-JDK imports --------------------------------------------------------
 
@@ -16,8 +16,8 @@ import com.vaadin.ui.Window;
 public class MySampleVaadinApplication extends Application {
     @Override
     public void init() {
-        Window mainWindow = new Window("Vaadin Application");
-        Label  label      = new Label("Hello Vaadin user");
+        final Window mainWindow = new Window("Vaadin Application");
+        final Label  label      = new Label("Hello Vaadin user");
 
         mainWindow.addComponent(label);
         setMainWindow(mainWindow);

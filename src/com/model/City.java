@@ -2,17 +2,31 @@ package com.model;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @SuppressWarnings({ "JpaDataSourceORMInspection", "UnusedDeclaration" })
+@NamedNativeQueries({ @NamedNativeQuery(
+    name        = "cityAll",
+    query       = "select * from test.tblcity",
+    resultClass = City.class
+) })
 @Entity
-@Table(name = "tblcity")
+@Table(name = "tblcity", schema = "test")
 public class City {
     @Id
-    private Integer cityid;
-    private String  cityname;
+    private Integer        cityid;
+    private String         cityname;
+    @OneToMany(mappedBy = "city")
+    private List<Province> provinceList;
+
+    public List<Province> getProvinceList() {
+        return provinceList;
+    }
+
+    public void setProvinceList(final List<Province> provinceList) {
+        this.provinceList = provinceList;
+    }
 
     @Override
     public boolean equals(final Object o) {

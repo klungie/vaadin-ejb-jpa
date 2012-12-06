@@ -16,7 +16,7 @@
         <servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
         <init-param>
             <param-name>application</param-name>
-            <param-value>com.ui.MySampleVaadinApplication</param-value>
+            <param-value>com.ui.MainApplication</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>

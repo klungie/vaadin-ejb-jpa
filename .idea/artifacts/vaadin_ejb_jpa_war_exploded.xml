@@ -1,0 +1,19 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" build-on-make="true" name="vaadin-ejb-jpa:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/vaadin_ejb_jpa_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="vaadin-ejb-jpa/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="vaadin-ejb-jpa" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="vaadin-6.8.5" />
+          <element id="library" level="project" name="JPA 2.0-2.0" />
+          <element id="library" level="project" name="Log" />
+          <element id="library" level="project" name="hibernate" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

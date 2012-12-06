@@ -2,16 +2,14 @@ package com.model;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @SuppressWarnings({ "JpaDataSourceORMInspection", "UnusedDeclaration" })
 @Entity
-@Table(name = "tblprovince")
+@Table(name = "tblprovince", schema = "test")
 public class Province {
     @ManyToOne
+    @JoinColumn(name = "cityid", referencedColumnName = "cityid")
     private City    city;
     @Id
     private Integer provinceid;

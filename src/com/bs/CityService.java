@@ -1,29 +1,39 @@
 package com.bs;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.model.City;
+import com.model.Province;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
-//~--- JDK imports ------------------------------------------------------------
+//~--- CLASSES --------------------------------------------------------------------------------------------------------------------------------------
 
 @SuppressWarnings("UnusedDeclaration")
 @Stateless
 public class CityService {
     private static final Logger log = (Logger) LoggerFactory.getLogger(CityService.class);
-    @PersistenceContext(unitName = "testPU")
-    private EntityManager       em;
 
+    //~--- FIELDS -----------------------------------------------------------------------------------------------------------------------------------
+
+    @PersistenceContext(unitName = "testPU")
+    private EntityManager em;
+
+    //~--- CONSTRUCTORS -----------------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Constructs ...
+     *
+     */
     public CityService() {
         log.info("CityService is constructed");
     }
+
+    //~--- METHODS ----------------------------------------------------------------------------------------------------------------------------------
 
     public List findAll() {
         log.info("CityService findAll");
@@ -33,10 +43,34 @@ public class CityService {
         return q.getResultList();
     }
 
-    public City findById(final Integer id) {
+    public City findById(@NotNull final Integer id) {
         log.info("CityService findById");
 
-        return em.find(City.class, id);
+        final Query query = em.createQuery("SELECT c FROM City c JOIN FETCH c.province WHERE c.cityid = :id").setParameter("id", id);
+        final List  list  = query.getResultList();
+        final City  city  = list.size() == 0 ? em.find(City.class, id) : (City) list.get(0);
+
+        return city;
+    }
+
+    public City reloadProvince(final City city) {
+        log.info("CityService refresh");
+
+        final City     cityPersist = em.merge(city);
+        final Province p           = cityPersist.getProvince();
+
+        if (p != null) {
+            p.getProvincename();
+
+            final Province newP = new Province();
+
+            newP.setProvinceid(p.getProvinceid());
+            newP.setProvincename(p.getProvincename());
+            em.detach(cityPersist);
+            cityPersist.setProvince(newP);
+        }
+
+        return cityPersist;
     }
 
     public void remove(final City city) {
@@ -44,13 +78,17 @@ public class CityService {
         em.remove(city);
     }
 
-    public void save(final City city) {
+    public boolean save(final City city) {
         log.info("CityService save");
 
         if (city.getCityid() == null) {
             em.persist(city);
+
+            return true;
         } else {
             em.merge(city);
+
+            return false;
         }
     }
 }

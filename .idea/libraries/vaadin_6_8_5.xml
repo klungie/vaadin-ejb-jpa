@@ -1,6 +1,5 @@
 <component name="libraryTable">
-  <library name="vaadin-6.8.5" type="vaadin">
-    <properties version="6.8.5" />
+  <library name="vaadin-6.8.5">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/vaadin-6.8.5.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/validation-api-1.0.0.GA.jar!/" />

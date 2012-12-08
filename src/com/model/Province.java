@@ -1,19 +1,37 @@
 package com.model;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import javax.persistence.*;
+import java.util.List;
+
+//~--- CLASSES --------------------------------------------------------------------------------------------------------------------------------------
 
 @SuppressWarnings({ "JpaDataSourceORMInspection", "UnusedDeclaration" })
+@NamedNativeQueries({ @NamedNativeQuery(
+    name           = "provinceAll",
+    query          = "select * from test.tblprovince",
+    resultClass    = Province.class
+) })
+@SequenceGenerator(
+    name           = "seqprovince",
+    schema         = "test",
+    sequenceName   = "test.seqprovince",
+    allocationSize = 1
+)
 @Entity
 @Table(name = "tblprovince", schema = "test")
 public class Province {
-    @ManyToOne
-    @JoinColumn(name = "cityid", referencedColumnName = "cityid")
-    private City    city;
+    @OneToMany(
+        mappedBy = "province",
+        cascade  = {},
+        fetch    = FetchType.LAZY
+    )
+    private List<City> cityList;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seqprovince")
     @Id
-    private Integer provinceid;
-    private String  provincename;
+    private Integer    provinceid;
+    private String     provincename;
+
+    //~--- METHODS ----------------------------------------------------------------------------------------------------------------------------------
 
     @Override
     public boolean equals(final Object o) {
@@ -27,9 +45,7 @@ public class Province {
 
         final Province province = (Province) o;
 
-        if ((provinceid != null)
-            ? !provinceid.equals(province.provinceid)
-            : province.provinceid != null) {
+        if ((provinceid != null) ? !provinceid.equals(province.provinceid) : province.provinceid != null) {
             return false;
         }
 
@@ -38,29 +54,36 @@ public class Province {
 
     @Override
     public int hashCode() {
-        return (provinceid != null)
-               ? provinceid.hashCode()
-               : 0;
+        return (provinceid != null) ? provinceid.hashCode() : 0;
     }
 
-    public City getCity() {
-        return city;
+    @Override
+    public String toString() {
+        return this.getProvincename();
     }
 
-    public void setCity(final City city) {
-        this.city = city;
+    //~--- GET METHODS ------------------------------------------------------------------------------------------------------------------------------
+
+    public List<City> getCityList() {
+        return cityList;
     }
 
     public Integer getProvinceid() {
         return provinceid;
     }
 
-    public void setProvinceid(final Integer provinceid) {
-        this.provinceid = provinceid;
-    }
-
     public String getProvincename() {
         return provincename;
+    }
+
+    //~--- SET METHODS ------------------------------------------------------------------------------------------------------------------------------
+
+    public void setCityList(final List<City> cityList) {
+        this.cityList = cityList;
+    }
+
+    public void setProvinceid(final Integer provinceid) {
+        this.provinceid = provinceid;
     }
 
     public void setProvincename(final String provincename) {

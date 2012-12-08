@@ -1,7 +1,7 @@
 package com.ui;
 
-import com.controller.CityController;
-import com.model.City;
+import com.controller.ProvinceController;
+import com.model.Province;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.ui.*;
 import org.slf4j.Logger;
@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 //~--- CLASSES --------------------------------------------------------------------------------------------------------------------------------------
 
 @SuppressWarnings({ "UnusedDeclaration", "FieldCanBeLocal" })
-public class CityListWindow extends Window {
-    private static final Logger log = (Logger) LoggerFactory.getLogger(CityListWindow.class);
+public class ProvinceListWindow extends Window {
+    private static final Logger log = (Logger) LoggerFactory.getLogger(ProvinceListWindow.class);
 
     //~--- FIELDS -----------------------------------------------------------------------------------------------------------------------------------
 
@@ -19,7 +19,7 @@ public class CityListWindow extends Window {
     private final Button             btnAdd     = new Button("Add");
     private final Table              table      = new Table("");
     private final MainApplication    app;
-    private final CityController cityController;
+    private final ProvinceController provinceController;
 
     //~--- CONSTRUCTORS -----------------------------------------------------------------------------------------------------------------------------
 
@@ -29,9 +29,9 @@ public class CityListWindow extends Window {
      *
      * @param app
      */
-    public CityListWindow(final MainApplication app) {
+    public ProvinceListWindow(final MainApplication app) {
         this.app           = app;
-        cityController = new CityController();
+        provinceController = new ProvinceController();
 
         buildUI();
         initListener();
@@ -40,14 +40,14 @@ public class CityListWindow extends Window {
     //~--- METHODS ----------------------------------------------------------------------------------------------------------------------------------
 
     private void buildUI() {
-        final String status = "cityService.buildUI";
+        final String status = "provinceService.buildUI";
 
         try {
-            this.setCaption("List City");
-            table.setContainerDataSource(CityController.cityBeanContainer);
+            this.setCaption("List Province");
+            table.setContainerDataSource(ProvinceController.provinceBeanContainer);
             table.setSelectable(true);
-            table.setVisibleColumns(new Object[] { "cityname" });
-            table.setColumnHeader("cityname", "City Name");
+            table.setVisibleColumns(new Object[] { "provincename" });
+            table.setColumnHeader("provincename", "Province Name");
 
             // add to main window
             final HorizontalLayout hLay = new HorizontalLayout();
@@ -71,20 +71,20 @@ public class CityListWindow extends Window {
     private void initListener() {
         btnRefresh.addListener(new Button.ClickListener() {
             public void buttonClick(final Button.ClickEvent event) {
-                cityController.doRefresh();
+                provinceController.doRefresh();
             }
         });
         btnAdd.addListener(new Button.ClickListener() {
             public void buttonClick(final Button.ClickEvent event) {
-                new CityFormWindow(app, cityController, new City());
+                new ProvinceFormWindow(app, provinceController, new Province());
             }
         });
         table.addListener(new ItemClickEvent.ItemClickListener() {
             @Override
             public void itemClick(final ItemClickEvent itemClickEvent) {
-                final City city = cityController.doEdit((Integer) itemClickEvent.getItemId());
+                final Province province = provinceController.doEdit((Integer) itemClickEvent.getItemId());
 
-                new CityFormWindow(app, cityController, city);
+                new ProvinceFormWindow(app, provinceController, province);
             }
         });
     }

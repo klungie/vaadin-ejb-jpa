@@ -32,6 +32,12 @@ public class ProvinceController {
         return bic;
     }
 
+    public void doDelete(final Integer id) {
+        final BeanItem<Province> bi = provinceBeanContainer.getItem(id);
+
+        provinceService.remove(bi.getBean());
+    }
+
     public Province doEdit(final Integer id) {
         final BeanItem<Province> bi       = provinceBeanContainer.getItem(id);
         final Province           province = provinceService.findById(bi.getBean().getProvinceid());
@@ -54,13 +60,6 @@ public class ProvinceController {
     }
 
     public void doSave(final Province province) {
-        if (provinceService.save(province)) {
-            provinceBeanContainer.addBean(province);
-        } else {
-            final int index = provinceBeanContainer.indexOfId(province.getProvinceid());
-
-            provinceBeanContainer.removeItem(province.getProvinceid());
-            provinceBeanContainer.addBeanAt(index, province);
-        }
+        provinceService.save(province);
     }
 }

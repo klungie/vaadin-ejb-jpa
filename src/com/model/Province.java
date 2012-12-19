@@ -1,5 +1,6 @@
 package com.model;
 
+import com.controller.ProvinceController;
 import javax.persistence.*;
 import java.util.List;
 
@@ -22,7 +23,7 @@ import java.util.List;
 public class Province {
     @OneToMany(
         mappedBy = "province",
-        cascade  = {},
+        cascade  = { CascadeType.MERGE, CascadeType.PERSIST },
         fetch    = FetchType.LAZY
     )
     private List<City> cityList;
@@ -88,5 +89,35 @@ public class Province {
 
     public void setProvincename(final String provincename) {
         this.provincename = provincename;
+    }
+
+    //~--- METHODS ----------------------------------------------------------------------------------------------------------------------------------
+
+    @PostPersist
+    private void postPersist() {
+        ProvinceController.provinceBeanContainer.addBean(this);
+    }
+
+    @PostRemove
+    private void postRemove() {
+        final int index = ProvinceController.provinceBeanContainer.indexOfId(this.getProvinceid());
+
+        if (index < 0) {
+            return;
+        }
+
+        ProvinceController.provinceBeanContainer.removeItem(this.getProvinceid());
+    }
+
+    @PostUpdate
+    private void postUpdate() {
+        final int index = ProvinceController.provinceBeanContainer.indexOfId(this.getProvinceid());
+
+        if (index < 0) {
+            return;
+        }
+
+        ProvinceController.provinceBeanContainer.removeItem(this.getProvinceid());
+        ProvinceController.provinceBeanContainer.addBeanAt(index, this);
     }
 }

@@ -75,14 +75,25 @@ public class CityService {
 
     public void remove(final City city) {
         log.info("CityService remove");
-        em.remove(city);
+
+        final City c = em.find(City.class, city.getCityid());
+
+        em.remove(c);
     }
 
     public boolean save(final City city) {
         log.info("CityService save");
 
         if (city.getCityid() == null) {
+            final Province province = city.getProvince();
+
+            city.setProvince(null);
             em.persist(city);
+
+            if (province != null) {
+                city.setProvince(province);
+                em.merge(city);
+            }
 
             return true;
         } else {

@@ -19,6 +19,12 @@ public class CityController {
 
     //~--- METHODS ----------------------------------------------------------------------------------------------------------------------------------
 
+    public void doDelete(final Integer id) {
+        final BeanItem<City> bi = cityBeanContainer.getItem(id);
+
+        cityService.remove(bi.getBean());
+    }
+
     public City doEdit(final Integer id) {
         final BeanItem<City> bi   = cityBeanContainer.getItem(id);
         final City           city = cityService.findById(bi.getBean().getCityid());
@@ -41,13 +47,6 @@ public class CityController {
     }
 
     public void doSave(final City city) {
-        if (cityService.save(city)) {
-            cityBeanContainer.addBean(city);
-        } else {
-            final int index = cityBeanContainer.indexOfId(city.getCityid());
-
-            cityBeanContainer.removeItem(city.getCityid());
-            cityBeanContainer.addBeanAt(index, city);
-        }
+        cityService.save(city);
     }
 }

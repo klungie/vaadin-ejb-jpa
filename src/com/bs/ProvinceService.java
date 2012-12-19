@@ -1,5 +1,6 @@
 package com.bs;
 
+import com.model.City;
 import com.model.Province;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,16 +45,31 @@ public class ProvinceService {
     public Province findById(final Integer id) {
         log.info("ProvinceService findById");
 
-        return em.find(Province.class, id);
+        final Province province = em.find(Province.class, id);
+
+        province.getCityList().size();    // access lazy
+
+        return province;
     }
 
     public void remove(final Province province) {
         log.info("ProvinceService remove");
-        em.remove(province);
+
+        final Province p = em.find(Province.class, province.getProvinceid());
+
+        em.remove(p);
     }
 
     public boolean save(final Province province) {
         log.info("ProvinceService save");
+
+        final List<City> cityList = province.getCityList();
+
+        if (cityList != null) {
+            for (final City c : cityList) {
+                c.setProvince(province);
+            }
+        }
 
         if (province.getProvinceid() == null) {
             em.persist(province);

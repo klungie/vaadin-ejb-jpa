@@ -1,5 +1,6 @@
 package com.model;
 
+import com.controller.CityController;
 import javax.persistence.*;
 import java.util.Date;
 
@@ -23,6 +24,7 @@ public class City {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seqcity")
     @Id
     private Integer  cityid;
+    @Column(nullable = false, length = 5)
     private String   cityname;
     private Integer  createby;
     private Date     createdatetime;
@@ -30,6 +32,7 @@ public class City {
     @JoinColumn(name = "provinceid", referencedColumnName = "provinceid")
     private Province province;
     private Integer  updateby;
+    @Version
     private Date     updatedatetime;
 
     //~--- METHODS ----------------------------------------------------------------------------------------------------------------------------------
@@ -125,6 +128,34 @@ public class City {
 
     //~--- METHODS ----------------------------------------------------------------------------------------------------------------------------------
 
+    @PostPersist
+    private void postPersist() {
+        CityController.cityBeanContainer.addBean(this);
+    }
+
+    @PostRemove
+    private void postRemove() {
+        final int index = CityController.cityBeanContainer.indexOfId(this.getCityid());
+
+        if (index < 0) {
+            return;
+        }
+
+        CityController.cityBeanContainer.removeItem(this.getCityid());
+    }
+
+    @PostUpdate
+    private void postUpdate() {
+        final int index = CityController.cityBeanContainer.indexOfId(this.getCityid());
+
+        if (index < 0) {
+            return;
+        }
+
+        CityController.cityBeanContainer.removeItem(this.getCityid());
+        CityController.cityBeanContainer.addBeanAt(index, this);
+    }
+
     @PrePersist
     private void prePersist() {
         createby       = 777;
@@ -133,7 +164,6 @@ public class City {
 
     @PreUpdate
     private void preUpdate() {
-        updateby       = 777;
-        updatedatetime = new Date();
+        updateby = 777;
     }
 }

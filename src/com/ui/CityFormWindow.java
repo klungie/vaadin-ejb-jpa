@@ -3,8 +3,10 @@ package com.ui;
 import com.controller.CityController;
 import com.controller.ProvinceController;
 import com.model.City;
+import com.model.Province;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,10 +61,26 @@ public class CityFormWindow extends Window {
 
                     return field;
                 } else if ("province".equals(pid)) {
-                    final ComboBox field = new ComboBox("Province");
+                    final ComboBox                    field = new ComboBox("Province");
+                    final BeanItemContainer<Province> bic   = ProvinceController.constructBeanItemContainer();
 
-                    field.setContainerDataSource(ProvinceController.constructBeanItemContainer());
+                    field.setContainerDataSource(bic);
                     field.setItemCaptionPropertyId("provincename");
+                    field.setTextInputAllowed(true);
+                    field.setInputPrompt("please select one");
+                    field.setNewItemsAllowed(true);
+                    field.setFilteringMode(AbstractSelect.Filtering.FILTERINGMODE_CONTAINS);
+                    field.setImmediate(true);
+                    field.setNewItemHandler(new AbstractSelect.NewItemHandler() {
+                        @Override
+                        public void addNewItem(String s) {
+                            Province p = new Province();
+
+                            p.setProvincename(s);
+                            bic.addBean(p);
+                            field.setValue(p);
+                        }
+                    });
 
                     return field;
                 }

@@ -15,11 +15,11 @@ public class CityListWindow extends Window {
 
     //~--- FIELDS -----------------------------------------------------------------------------------------------------------------------------------
 
-    private final Button             btnRefresh = new Button("Refresh");
-    private final Button             btnAdd     = new Button("Add");
-    private final Table              table      = new Table("");
-    private final MainApplication    app;
-    private final CityController cityController;
+    private final Button          btnRefresh = new Button("Refresh");
+    private final Button          btnAdd     = new Button("Add");
+    private final Table           table      = new Table("");
+    private final MainApplication app;
+    private final CityController  cityController;
 
     //~--- CONSTRUCTORS -----------------------------------------------------------------------------------------------------------------------------
 
@@ -30,7 +30,7 @@ public class CityListWindow extends Window {
      * @param app
      */
     public CityListWindow(final MainApplication app) {
-        this.app           = app;
+        this.app       = app;
         cityController = new CityController();
 
         buildUI();
@@ -82,9 +82,13 @@ public class CityListWindow extends Window {
         table.addListener(new ItemClickEvent.ItemClickListener() {
             @Override
             public void itemClick(final ItemClickEvent itemClickEvent) {
-                final City city = cityController.doEdit((Integer) itemClickEvent.getItemId());
+                if (itemClickEvent.isCtrlKey()) {
+                    cityController.doDelete((Integer) itemClickEvent.getItemId());
+                } else {
+                    final City city = cityController.doEdit((Integer) itemClickEvent.getItemId());
 
-                new CityFormWindow(app, cityController, city);
+                    new CityFormWindow(app, cityController, city);
+                }
             }
         });
     }

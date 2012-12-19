@@ -82,9 +82,13 @@ public class ProvinceListWindow extends Window {
         table.addListener(new ItemClickEvent.ItemClickListener() {
             @Override
             public void itemClick(final ItemClickEvent itemClickEvent) {
-                final Province province = provinceController.doEdit((Integer) itemClickEvent.getItemId());
+                if (itemClickEvent.isCtrlKey()) {
+                    provinceController.doDelete((Integer) itemClickEvent.getItemId());
+                } else {
+                    final Province province = provinceController.doEdit((Integer) itemClickEvent.getItemId());
 
-                new ProvinceFormWindow(app, provinceController, province);
+                    new ProvinceFormWindow(app, provinceController, province);
+                }
             }
         });
     }
